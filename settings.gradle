@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "EventKT"
 include ':app'
+include ':eventkt'
