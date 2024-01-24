@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EventKT</string>
+    <string name="main_activity">Main Activity</string>
+    <string name="second_activity">Second Activity</string>
+    <string name="third_activity">Third Activity</string>
+    <string name="go_back">Go Back</string>
 </resources>
