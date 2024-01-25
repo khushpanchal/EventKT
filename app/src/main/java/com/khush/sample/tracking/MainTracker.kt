@@ -1,6 +1,7 @@
 package com.khush.sample.tracking
 
 import android.content.Context
+import com.khush.sample.MainApplication
 
 class MainTracker(
     private val context: Context
@@ -32,7 +33,7 @@ class MainTracker(
     }
 
     private fun track(name: String, params: HashMap<String, Any>) {
-        //track the event here
+        (context.applicationContext as MainApplication).eventKtTracker.track(name, params)
     }
 
 }
