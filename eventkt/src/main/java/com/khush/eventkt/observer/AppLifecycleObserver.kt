@@ -4,7 +4,11 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.khush.eventkt.event.EventManager
 
-
+/**
+ * Observes App lifecycle and [EventManager.flushAll] flushes event whenever app goes to background
+ *
+ * @property eventManager Check [EventManager]
+ */
 internal class AppLifecycleObserver(private val eventManager: EventManager) :
     DefaultLifecycleObserver {
 

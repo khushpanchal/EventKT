@@ -19,7 +19,25 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-
+/**
+ * Event manager: Manages persistent and network operations
+ *
+ * - Checks threshold
+ * - Flush events to network
+ * - Manages status update of events
+ * - Creates API request
+ * - Responsible for logging on every every event add and successful or failure network calls
+ *
+ * @property numBased Boolean to decide if [flushAll] happens based on event counts
+ * @property eventNumThreshold Maximum number of events after which [flushAll] gets called
+ * @property timeBased Boolean to decide if [flushAll] happens based on time
+ * @property eventTimeThreshold Time interval in milliseconds at which [flushAll] gets called
+ * @property sizeBased Boolean to decide if [flushAll] happens based on events size
+ * @property eventSizeThreshold Maximum size of events in bytes after which [flushAll] gets called
+ * @property iGroupEventListener Decides whether network call made by client or library
+ * @property iCacheScheme Decides the Caching logic, class responsible for storing events
+ * @property logger Logging events
+ */
 internal class EventManager(
     private val numBased: Boolean,
     private val eventNumThreshold: Int,
@@ -50,7 +68,14 @@ internal class EventManager(
         }
     }
 
-
+    /**
+     * - Add event to storage
+     * - Check threshold [checkThreshold]
+     * - Flush all the events [flushAll]
+     *
+     * @param event Single [Event]
+     * @param force Boolean if true, all events in storage gets flushed immediately
+     */
     fun add(event: Event, force: Boolean = false) {
         logger.log(msg = "Event Added: ${event.toJson()}")
         iCacheScheme.add(event)
@@ -59,7 +84,11 @@ internal class EventManager(
         }
     }
 
-
+    /**
+     * Check threshold passed to [EventManager]
+     *
+     * @return Boolean for valid threshold
+     */
     private fun checkThreshold(): Boolean {
         currentEventNum = iCacheScheme.getEventSize(listOf(DEFAULT))
         currentEventSize = iCacheScheme.getEventSizeInBytes(listOf(DEFAULT))
@@ -67,25 +96,41 @@ internal class EventManager(
                 || (sizeBased && currentEventSize >= eventSizeThreshold)
     }
 
-
+    /**
+     * Flush all: Remove all the [SUCCESS] status event from storage and [performNetworkRequest]
+     *
+     */
     @Synchronized
     fun flushAll() { //cleaning storage, status, network call
         iCacheScheme.removeAll(listOf(SUCCESS))
         performNetworkRequest()
     }
 
-
+    /**
+     * On Network success marked the events status as [SUCCESS]
+     *
+     * @param eventList List of [Event]
+     */
     private fun networkSuccess(eventList: List<Event>) {
         iCacheScheme.updateEventStatusAll(eventList, SUCCESS)
         iCacheScheme.removeAll(listOf(SUCCESS))
     }
 
-
+    /**
+     * On Network failure marked the events status as [FAILED]
+     *
+     * @param eventList List of [Event]
+     */
     private fun networkFailure(eventList: List<Event>) {
         iCacheScheme.updateEventStatusAll(eventList, FAILED)
     }
 
-
+    /**
+     * Fetch all [DEFAULT] and [FAILED] events and marked them [PENDING]
+     *
+     * Start network request by calling [IGroupEventListener.onEventGrouped] and gets success status and [Event] list
+     *
+     */
     private fun performNetworkRequest() {
         val eventList = iCacheScheme.getEvents(listOf(DEFAULT, FAILED))
         if (eventList.isEmpty()) return
@@ -106,7 +151,12 @@ internal class EventManager(
         }
     }
 
-
+    /**
+     * Takes the list of event and converts to Json String for API request body
+     *
+     * @param eventList List of [Event]
+     * @return Request body as json string
+     */
     private fun eventListToJsonString(eventList: List<Event>): String {
         val eventRequestBody = mutableListOf<EventsRequestBody>()
         eventList.forEach {
@@ -120,7 +170,10 @@ internal class EventManager(
         return requestBody.toJson()
     }
 
-
+    /**
+     * Start [timerJob] for time based batching of event and [flushAll] every [eventTimeThreshold] milliseconds
+     *
+     */
     fun startTimer() {
         if (!timeBased) return
         timerJob = CoroutineScope(Dispatchers.IO).launch {
@@ -131,7 +184,10 @@ internal class EventManager(
         }
     }
 
-
+    /**
+     * Cancel [timerJob] for time based batching of events
+     *
+     */
     fun stopTimer() {
         if (!timeBased) return
         timerJob?.cancel()

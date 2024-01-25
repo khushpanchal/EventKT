@@ -19,7 +19,10 @@ import kotlin.experimental.and
 
 internal object Utils {
 
-
+    /**
+     *
+     * @return Generates request body to be sent to API call
+     */
     fun RequestBody.toJson(): String {
         val requestBody = JSONObject()
         val eventArray = JSONArray()
@@ -37,7 +40,10 @@ internal object Utils {
         return requestBody.toString()
     }
 
-
+    /**
+     *
+     * @return Converts [Event] to Json String
+     */
     fun Event.toJson(): String {
         val jsonBody = JSONObject()
         jsonBody.put(NAME, this.name)
@@ -51,7 +57,11 @@ internal object Utils {
         return jsonBody.toString()
     }
 
-
+    /**
+     *
+     * @param jsonString Json String
+     * @return Converts json string to [Event]
+     */
     fun fromJson(jsonString: String): Event {
         val jsonObject = JSONObject(jsonString)
         val event = Event(
@@ -69,7 +79,10 @@ internal object Utils {
         return event
     }
 
-
+    /**
+     *
+     * @return Converts List of [Event] to Json string
+     */
     fun List<Event>.toJson(): String {
         val jsonArray = JSONArray()
         this.forEach {
@@ -87,7 +100,11 @@ internal object Utils {
         return jsonArray.toString()
     }
 
-
+    /**
+     *
+     * @param jsonString Json String
+     * @return Converts Json String to List of [Event]
+     */
     fun fromJsonStringToEventList(jsonString: String): List<Event> {
         val eventList = mutableListOf<Event>()
         val jsonArray = JSONArray(jsonString)
@@ -111,7 +128,13 @@ internal object Utils {
         return eventList
     }
 
-
+    /**
+     * Validate event sent by client and throws exception if not valid
+     *
+     * @param event Check [Event]
+     * @param eventValidationConfig Check [EventValidationConfig]
+     * @throws IllegalArgumentException Throws exception for non valid events
+     */
     fun validateEvent(event: Event, eventValidationConfig: EventValidationConfig) {
         // Check length of name
         if (event.name.length > eventValidationConfig.maxNameLength) {
@@ -147,7 +170,10 @@ internal object Utils {
         return value is String || value is Int || value is Double || value is Float || value is Long
     }
 
-
+    /**
+     * Generate unique string using MD5 algorithm
+     *
+     */
     fun generateFilePath(string: String): String {
         val hash: ByteArray = try {
             MessageDigest.getInstance("MD5").digest(string.toByteArray(charset("UTF-8")))
@@ -167,7 +193,13 @@ internal object Utils {
         return hex.toString().hashCode().toString()
     }
 
-
+    /**
+     * Validate thresholds passed by client with minimum values
+     *
+     * @param eventThreshold List of [EventThreshold]
+     * @return Threshold - [EventThreshold.NumBased.value], [EventThreshold.TimeBased.value], [EventThreshold.SizeBased.value]
+     * @throws IllegalArgumentException Throws exception for non valid thresholds
+     */
     fun validateThresholds(eventThreshold: List<EventThreshold>): Triple<Int, Long, Int> {
         var eventNumThreshold = 0
         var eventTimeThreshold = 0L

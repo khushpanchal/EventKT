@@ -4,7 +4,11 @@ import android.util.Log
 import com.khush.eventkt.LogType
 import com.khush.eventkt.Logger
 
-
+/**
+ * Implements [Logger]
+ *
+ * @property enableLogs Boolean to enable logs for the library
+ */
 internal class EventKtLog(private val enableLogs: Boolean) : Logger {
 
     override fun log(tag: String?, msg: String?, tr: Throwable?, type: LogType) {

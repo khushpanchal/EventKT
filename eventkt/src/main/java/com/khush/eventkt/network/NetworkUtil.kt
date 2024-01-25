@@ -10,14 +10,24 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
 
-
+/**
+ * Network util
+ *
+ */
 internal object NetworkUtil {
     private val okhttpClient =
         OkHttpClient.Builder()
             .addInterceptor(FakeInterceptor())
             .build()
 
-
+    /**
+     * Perform network operation
+     *
+     * @param url API Url passed by client
+     * @param headers API headers passed by client
+     * @param body API request body for POST api call
+     * @param isSuccess Lambda to invoke on success or failure of network operation
+     */
     fun performNetworkOperation(
         url: String,
         headers: HashMap<String, String>,

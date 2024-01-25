@@ -6,7 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-
+/**
+ * Network call manager: Whenever a batch of [Event] is ready, makes the network call
+ *
+ * @property apiUrl API Url for network call
+ * @property apiHeaders API headers for network call
+ */
 internal class NetworkCallManager(
     private val apiUrl: String,
     private val apiHeaders: HashMap<String, String>

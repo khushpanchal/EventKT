@@ -20,7 +20,23 @@ import java.io.File
 import java.util.Collections
 import java.util.UUID
 
-
+/**
+ * File cache manager: Class that stores events to the file system in disk
+ *
+ * Purpose of the class: Keep synced with memory
+ *
+ * [eventToFileIdMap] - Each event with unique event id is mapped to file id (unique name of the file)
+ *
+ * [uniqueFileId] - Unique Id of the file (or name of the file) in which events are pushed
+ *
+ * All the file operations are running in the background thread
+ *
+ * Any operation failure invoke [moveInMemoryDataToFile] as a fallback which cleans all the disk and re sync
+ *
+ * @property context Application context
+ * @property filePath Name of the directory inside which events are stored in different files
+ * @property perFileSizeThreshold Maximum size per file in bytes, directory can have multiple files
+ */
 class FileCacheManager(
     private val context: Context,
     private val filePath: String,
@@ -41,7 +57,12 @@ class FileCacheManager(
         }.launchIn(scope)
     }
 
-
+    /**
+     * Add Single event to the memory and then add to the file
+     *
+     * @param event Single [Event]
+     * @return Boolean for successful addition
+     */
     override fun add(event: Event): Boolean {
         if (super.add(event)) {
             eventHashMap[event.id]?.let {
@@ -52,7 +73,12 @@ class FileCacheManager(
         return false
     }
 
-
+    /**
+     * Add List of events to the memory and then add to file
+     *
+     * @param eventList List of [Event]
+     * @return Boolean for successful addition
+     */
     override fun addAll(eventList: List<Event>): Boolean {
         if (super.addAll(eventList)) {
             val list = mutableListOf<Event>()
@@ -67,7 +93,11 @@ class FileCacheManager(
         return false
     }
 
-
+    /**
+     * If [Event] is not mapped with any file, map it to [uniqueFileId]
+     *
+     * @param event Single [Event]
+     */
     private fun assignFileIdToEvent(event: Event) {
         if (!eventToFileIdMap.containsKey(event.id)) {
             eventToFileIdMap[event.id] = uniqueFileId
@@ -75,19 +105,30 @@ class FileCacheManager(
         }
     }
 
-
+    /**
+     * If current [uniqueFileId] size exceed [perFileSizeThreshold], generates new [uniqueFileId]
+     *
+     */
     private fun checkAndAssignFileId() {
         if (getFile(uniqueFileId).length() > perFileSizeThreshold) {
             generateUniqueFileId()
         }
     }
 
-
+    /**
+     * Generate [uniqueFileId]
+     *
+     */
     private fun generateUniqueFileId() {
         uniqueFileId = System.nanoTime().toString().plus(UUID.randomUUID().toString())
     }
 
-
+    /**
+     * Remove single event from the memory and then remove from the file
+     *
+     * @param event Single [Event]
+     * @return Boolean for successful removal
+     */
     override fun remove(event: Event): Boolean {
         val eventToRemove = eventHashMap[event.id]
         if (super.remove(event)) {
@@ -99,7 +140,12 @@ class FileCacheManager(
         return false
     }
 
-
+    /**
+     * Remove list of events from the memory based on the status and then remove from the file
+     *
+     * @param status List of [EventStatus] for which events get removed
+     * @return Boolean for successful removal
+     */
     override fun removeAll(status: List<EventStatus>): Boolean {
         val eventToRemoveList = mutableListOf<Event>()
         synchronized(eventHashMap) {
@@ -118,12 +164,22 @@ class FileCacheManager(
         return false
     }
 
-
+    /**
+     * Remove event from [eventToFileIdMap]
+     *
+     * @param event Single [Event]
+     */
     private fun removeEventFromMap(event: Event) {
         eventToFileIdMap.remove(event.id)
     }
 
-
+    /**
+     * Update status for the event to the memory and then to the file
+     *
+     * @param event Single [Event]
+     * @param status [EventStatus] to update in event
+     * @return Boolean for successful update
+     */
     override fun updateEventStatus(event: Event, status: EventStatus): Boolean {
         if (super.updateEventStatus(event, status)) {
             eventHashMap[event.id]?.let {
@@ -134,7 +190,13 @@ class FileCacheManager(
         return false
     }
 
-
+    /**
+     * Update status for the list of events to the memory and then to the file
+     *
+     * @param eventList List of [Event]
+     * @param status [EventStatus] to update in the list of event
+     * @return Boolean for successful update
+     */
     override fun updateEventStatusAll(eventList: List<Event>, status: EventStatus): Boolean {
         if (super.updateEventStatusAll(eventList, status)) {
             val list = mutableListOf<Event>()
@@ -149,7 +211,11 @@ class FileCacheManager(
         return false
     }
 
-
+    /**
+     * Fetch in memory events and push all the events to disk
+     *
+     * @param success Lambda(Boolean) to invoke after successful write to disk
+     */
     override fun syncDataToCache(success: (Boolean) -> Unit) {
         sharedFlow.tryEmit(
             scope.launch(start = CoroutineStart.LAZY) {
@@ -164,7 +230,11 @@ class FileCacheManager(
         )
     }
 
-
+    /**
+     * Fetch events from the disk
+     *
+     * @param success Lambda(Boolean, List of [Event]) to invoke after successful fetch from disk
+     */
     override fun syncDataFromCache(success: (Boolean, List<Event>) -> Unit) {
         sharedFlow.tryEmit(
             scope.launch(start = CoroutineStart.LAZY) {
@@ -179,7 +249,13 @@ class FileCacheManager(
         )
     }
 
-
+    /**
+     * [assignFileIdToEvent] and [addUpdateEventToFile]
+     *
+     * Any failure invokes [moveInMemoryDataToFile]
+     *
+     * @param event Single [Event]
+     */
     private fun syncEventToFile(event: Event) {
         sharedFlow.tryEmit(
             scope.launch(start = CoroutineStart.LAZY) {
@@ -195,7 +271,13 @@ class FileCacheManager(
         )
     }
 
-
+    /**
+     * For each event [assignFileIdToEvent] and [addUpdateEventToFile]
+     *
+     * Any failure invokes [moveInMemoryDataToFile]
+     *
+     * @param eventList List of [Event]
+     */
     private fun syncEventsToFile(eventList: List<Event>) {
         sharedFlow.tryEmit(
             scope.launch(start = CoroutineStart.LAZY) {
@@ -213,7 +295,13 @@ class FileCacheManager(
         )
     }
 
-
+    /**
+     * [removeEventFromFile] and [removeEventFromMap]
+     *
+     * Any failure invokes [moveInMemoryDataToFile]
+     *
+     * @param event Single [Event]
+     */
     private fun syncEventRemovalToFile(event: Event) {
         sharedFlow.tryEmit(
             scope.launch(start = CoroutineStart.LAZY) {
@@ -229,7 +317,13 @@ class FileCacheManager(
         )
     }
 
-
+    /**
+     * For each event [removeEventFromFile] and [removeEventFromMap]
+     *
+     * Any failure invokes [moveInMemoryDataToFile]
+     *
+     * @param eventList List of [Event]
+     */
     private fun syncEventsRemovalToFile(eventList: List<Event>) {
         sharedFlow.tryEmit(
             scope.launch(start = CoroutineStart.LAZY) {
@@ -247,7 +341,10 @@ class FileCacheManager(
         )
     }
 
-
+    /**
+     * Suspend function that delete all the files in disk and move all the in memory events to disk again
+     *
+     */
     @Throws(Exception::class)
     private suspend fun moveInMemoryDataToFile() =
         withContext(Dispatchers.IO) {
@@ -270,7 +367,13 @@ class FileCacheManager(
             }
         }
 
-
+    /**
+     * Suspend function that read all the events from disk and load it to the memory
+     *
+     * Also maps event id to file id [eventToFileIdMap]
+     *
+     * @param eventsFromCache Lambda(List of [Event]) that invokes on successful fetch from disk
+     */
     @Throws(Exception::class)
     private suspend fun moveFileDataToMemory(eventsFromCache: (List<Event>) -> Unit) =
         withContext(Dispatchers.IO) {
@@ -292,7 +395,11 @@ class FileCacheManager(
             eventsFromCache.invoke(eventList)
         }
 
-
+    /**
+     * Add or update event to file
+     *
+     * @param event Single [Event]
+     */
     @Throws(Exception::class)
     private suspend fun addUpdateEventToFile(event: Event) =
         withContext(Dispatchers.IO) {
@@ -303,7 +410,11 @@ class FileCacheManager(
             writeEventsToFile(fileId, events)
         }
 
-
+    /**
+     * Remove event from file
+     *
+     * @param event Single [Event]
+     */
     @Throws(Exception::class)
     private suspend fun removeEventFromFile(event: Event) =
         withContext(Dispatchers.IO) {
@@ -321,7 +432,12 @@ class FileCacheManager(
             }
         }
 
-
+    /**
+     * Read events from file
+     *
+     * @param fileId Name of the file
+     * @return List of [Event]
+     */
     @Throws(Exception::class)
     private suspend fun readEventsFromFile(fileId: String): List<Event> =
         withContext(Dispatchers.IO) {
@@ -333,7 +449,12 @@ class FileCacheManager(
             }
         }
 
-
+    /**
+     * Write events to file
+     *
+     * @param fileId Name of the file
+     * @param events List of [Event]
+     */
     @Throws(Exception::class)
     private suspend fun writeEventsToFile(fileId: String, events: List<Event>) =
         withContext(Dispatchers.IO) {
@@ -341,7 +462,12 @@ class FileCacheManager(
             file.writeText(events.toJson())
         }
 
-
+    /**
+     * Get file from the disk
+     *
+     * @param fileId Name of the file
+     * @return [File]
+     */
     private fun getFile(fileId: String): File {
         val directory = File(context.cacheDir, filePath)
         if (!directory.exists()) {

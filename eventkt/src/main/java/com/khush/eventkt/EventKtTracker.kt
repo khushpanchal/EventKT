@@ -16,7 +16,64 @@ import com.khush.eventkt.utils.Utils
 import com.khush.eventkt.utils.Utils.generateFilePath
 import com.khush.eventkt.utils.Utils.validateThresholds
 
-
+/**
+ * EventKtTracker: Core class that interacts with client
+ *
+ * Implements [ITracker]
+ *
+ * Two ways to initialize [EventKtTracker]:
+ *
+ * - To make network call at library whenever a batch of events is ready
+ * ```
+ * val eventKtTracker = EventKtTracker.init(
+ *  context = this,
+ *  apiUrl = "Your api url",
+ *  apiKey = "Your api key"
+ * )
+ * val eventTracker = EventTracker.Builder().addTracker(eventKtTracker).build()
+ *
+ * //Library will add the "x-api-key" = "apiKey sent by client" into the API headers
+ * //API request format sent by library
+ * {
+ *  “events”: [
+ *   {
+ *    “event”: “event 1”,
+ *    “parameters”: {
+ *     “param1”: “value1”,
+ *     “param2”: “value2”
+ *    }
+ *   },
+ *   …
+ *   …
+ *  ]
+ * }
+ * ```
+ * - To send the list of [EventNameParam] and request body to client whenever a batch of events is ready
+ * ```
+ * val eventKtTracker = EventKtTracker.initWithCallback(
+ *  context = this,
+ *  directoryName = "Unique name of the directory to store events in disk"
+ * ) { jsonBody, eventList ->
+ *    // this is a suspend block runs on background thread where client can make the network call
+ *    // client need to return the Boolean indicating whether network request is success or false
+ *    return@initWithCallback true
+ * }
+ * val eventTracker = EventTracker.Builder().addTracker(eventKtTracker).build()
+ * ```
+ * @property eventValidationConfig Includes valid limits for [Event] properties, Also check [EventValidationConfig]
+ *
+ * @param context Application context
+ * @param needApiCall Boolean to decide if library makes api call
+ * @param apiUrl API url
+ * @param apiHeaders API headers
+ * @param eventNumThreshold Threshold value for count of events
+ * @param eventTimeThreshold Threshold interval time in milliseconds
+ * @param eventSizeThreshold Threshold value for size of events in bytes
+ * @param cacheScheme Caching Strategy for memory or disk
+ * @param logger Logger interface to log event addition and network results
+ * @param makeNetworkRequest Lambda (suspend function) that invokes whenever the batch of events is ready for network call,
+ * client passes boolean for successful or failure network call
+ */
 class EventKtTracker private constructor(
     context: Context,
     needApiCall: Boolean,
@@ -58,7 +115,20 @@ class EventKtTracker private constructor(
     }
 
     companion object {
-
+        /**
+         * Init - To make network call at library whenever a batch of events is ready
+         *
+         * @param context Application context
+         * @param apiUrl API url for making network request to server
+         * @param apiHeaders Headers included in API request
+         * @param eventThreshold List of [EventThreshold] based on which events get batched
+         * @param apiKey API key that is included in headers and also help generate unique file path for event storage
+         * @param cacheScheme Caching logic for storing events on disk, Default - [FileCacheManager]
+         * @param eventValidationConfig Configure event limits, Default - [EventValidationConfig]
+         * @param enableLogs Boolean to enable logs, Default - [BuildConfig.DEBUG]
+         * @param logger Logger interface, client can implements its own Logger, Default - [EventKtLog]
+         * @return Instance of [EventKtTracker]
+         */
         fun init(
             context: Context,
             apiUrl: String,
@@ -97,7 +167,20 @@ class EventKtTracker private constructor(
             )
         }
 
-
+        /**
+         * Init with callback - To send the list of [EventNameParam] and request body to client whenever a batch of events is ready
+         *
+         * @param context Application context
+         * @param eventThreshold List of [EventThreshold] based on which events get batched
+         * @param directoryName Unique directory name to store events in file system
+         * @param cacheScheme Caching logic for storing events on disk, Default - [FileCacheManager]
+         * @param eventValidationConfig Configure event limits, Default - [EventValidationConfig]
+         * @param enableLogs Boolean to enable logs, Default - [BuildConfig.DEBUG]
+         * @param logger Logger interface, client can implements its own Logger, Default - [EventKtLog]
+         * @param makeNetworkRequest Lambda (suspend function) that invokes whenever the batch of events is ready for network call,
+         * client passes boolean for successful or failure network call
+         * @return Instance of [EventKtTracker]
+         */
         fun initWithCallback(
             context: Context,
             eventThreshold: List<EventThreshold> = listOf(EventThreshold.NumBased()),
@@ -131,7 +214,12 @@ class EventKtTracker private constructor(
         }
     }
 
-
+    /**
+     * Validate the event as per [eventValidationConfig] and track single event, Also check [Utils.validateEvent]
+     *
+     * @param eventName Name of the single event
+     * @param eventParameters Parameters associated with the single event
+     */
     override fun track(eventName: String, eventParameters: HashMap<String, Any>) {
         val event = Event(eventName, eventParameters)
         Utils.validateEvent(
@@ -141,7 +229,10 @@ class EventKtTracker private constructor(
         eventManager.add(event)
     }
 
-
+    /**
+     * Track all the untracked events immediately, Check [EventManager.flushAll]
+     *
+     */
     override fun trackAll() {
         eventManager.flushAll()
     }

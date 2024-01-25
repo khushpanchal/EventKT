@@ -5,7 +5,18 @@ import com.khush.eventkt.event.Event
 import com.khush.eventkt.event.EventStatus
 import java.util.Collections
 
-
+/**
+ * In memory cache manager
+ *
+ * Events are stored in [eventHashMap] in memory only
+ *
+ * Open class that can be extended and add the logic for storing events in disk
+ *
+ * Keep events in memory and disk synced all the time, in case of crash, events will not be lost
+ *
+ * [add], [addAll], [remove], [removeAll], [updateEventStatus], [updateEventStatusAll] are annotated with [CallSuper],
+ * Any class extending [InMemoryCacheManager] for disk caching logic, need to write events in memory as well
+ */
 open class InMemoryCacheManager : ICacheScheme {
 
     protected val eventHashMap: MutableMap<String, Event> =
