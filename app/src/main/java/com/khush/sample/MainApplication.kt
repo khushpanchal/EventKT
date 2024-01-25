@@ -3,6 +3,7 @@ package com.khush.sample
 import android.app.Application
 import android.util.Log
 import com.khush.eventkt.EventKtTracker
+import com.khush.eventkt.amplitude.AmplitudeTracker
 import com.khush.eventkt.base.EventTracker
 import com.khush.eventkt.firebase.FirebaseTracker
 import com.khush.eventkt.mixpanel.MixpanelTracker
@@ -46,6 +47,10 @@ class MainApplication : Application() {
                 .addTracker {
                     val mixPanelToken = "Add your mixpanel token"
                     MixpanelTracker.init(this, mixPanelToken)
+                }
+                .addTracker {
+                    val amplitudeApiKey = "Add your amplitude API key"
+                    AmplitudeTracker.init(this, amplitudeApiKey)
                 }
                 .build()
 
