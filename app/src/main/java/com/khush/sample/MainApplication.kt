@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.khush.eventkt.EventKtTracker
 import com.khush.eventkt.base.EventTracker
+import com.khush.eventkt.firebase.FirebaseTracker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -38,6 +39,9 @@ class MainApplication : Application() {
 //                        apiUrl = "https://fake-url.com"
 //                    )
 //                )
+                .addTracker(
+                    FirebaseTracker.init(this)
+                )
                 .build()
 
 
