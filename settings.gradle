@@ -18,10 +18,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "EventKT"
 include ':app'
-include ':eventkt-base'
-include ':eventkt'
-include ':eventkt-firebase'
-include ':eventkt-interceptor'
-include ':eventkt-interceptor-no-op'
-include ':eventkt-mixpanel'
-include ':eventkt-amplitude'

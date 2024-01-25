@@ -43,9 +43,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation(project(":eventkt"))
-    implementation(project(":eventkt-firebase"))
-    implementation(project(":eventkt-mixpanel"))
-    implementation(project(":eventkt-amplitude"))
+    implementation 'com.github.khushpanchal.EventKT:eventkt:0.1.0'
+    implementation 'com.github.khushpanchal.EventKT:eventkt-firebase:0.1.0'
+    implementation 'com.github.khushpanchal.EventKT:eventkt-mixpanel:0.1.0'
+    implementation 'com.github.khushpanchal.EventKT:eventkt-amplitude:0.1.0'
 
 }
