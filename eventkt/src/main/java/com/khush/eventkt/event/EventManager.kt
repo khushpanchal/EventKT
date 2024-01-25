@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
+
 internal class EventManager(
     private val numBased: Boolean,
     private val eventNumThreshold: Int,
@@ -37,7 +38,18 @@ internal class EventManager(
 
     init {
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver(this))
+        iCacheScheme.syncDataFromCache { success, list ->
+            if (success) {
+                iCacheScheme.getEvents(listOf(PENDING)).forEach { event ->
+                    if (event in list) {
+                        iCacheScheme.updateEventStatus(event, FAILED)
+                    }
+                }
+                flushAll()
+            }
+        }
     }
+
 
     fun add(event: Event, force: Boolean = false) {
         logger.log(msg = "Event Added: ${event.toJson()}")
@@ -47,6 +59,7 @@ internal class EventManager(
         }
     }
 
+
     private fun checkThreshold(): Boolean {
         currentEventNum = iCacheScheme.getEventSize(listOf(DEFAULT))
         currentEventSize = iCacheScheme.getEventSizeInBytes(listOf(DEFAULT))
@@ -54,20 +67,24 @@ internal class EventManager(
                 || (sizeBased && currentEventSize >= eventSizeThreshold)
     }
 
+
     @Synchronized
     fun flushAll() { //cleaning storage, status, network call
         iCacheScheme.removeAll(listOf(SUCCESS))
         performNetworkRequest()
     }
 
+
     private fun networkSuccess(eventList: List<Event>) {
         iCacheScheme.updateEventStatusAll(eventList, SUCCESS)
         iCacheScheme.removeAll(listOf(SUCCESS))
     }
 
+
     private fun networkFailure(eventList: List<Event>) {
         iCacheScheme.updateEventStatusAll(eventList, FAILED)
     }
+
 
     private fun performNetworkRequest() {
         val eventList = iCacheScheme.getEvents(listOf(DEFAULT, FAILED))
@@ -89,6 +106,7 @@ internal class EventManager(
         }
     }
 
+
     private fun eventListToJsonString(eventList: List<Event>): String {
         val eventRequestBody = mutableListOf<EventsRequestBody>()
         eventList.forEach {
@@ -102,6 +120,7 @@ internal class EventManager(
         return requestBody.toJson()
     }
 
+
     fun startTimer() {
         if (!timeBased) return
         timerJob = CoroutineScope(Dispatchers.IO).launch {
@@ -111,6 +130,7 @@ internal class EventManager(
             }
         }
     }
+
 
     fun stopTimer() {
         if (!timeBased) return

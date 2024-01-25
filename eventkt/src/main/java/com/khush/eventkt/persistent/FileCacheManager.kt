@@ -20,6 +20,7 @@ import java.io.File
 import java.util.Collections
 import java.util.UUID
 
+
 class FileCacheManager(
     private val context: Context,
     private val filePath: String,
@@ -51,6 +52,7 @@ class FileCacheManager(
         return false
     }
 
+
     override fun addAll(eventList: List<Event>): Boolean {
         if (super.addAll(eventList)) {
             val list = mutableListOf<Event>()
@@ -65,6 +67,7 @@ class FileCacheManager(
         return false
     }
 
+
     private fun assignFileIdToEvent(event: Event) {
         if (!eventToFileIdMap.containsKey(event.id)) {
             eventToFileIdMap[event.id] = uniqueFileId
@@ -72,15 +75,18 @@ class FileCacheManager(
         }
     }
 
+
     private fun checkAndAssignFileId() {
         if (getFile(uniqueFileId).length() > perFileSizeThreshold) {
             generateUniqueFileId()
         }
     }
 
+
     private fun generateUniqueFileId() {
         uniqueFileId = System.nanoTime().toString().plus(UUID.randomUUID().toString())
     }
+
 
     override fun remove(event: Event): Boolean {
         val eventToRemove = eventHashMap[event.id]
@@ -92,6 +98,7 @@ class FileCacheManager(
         }
         return false
     }
+
 
     override fun removeAll(status: List<EventStatus>): Boolean {
         val eventToRemoveList = mutableListOf<Event>()
@@ -111,9 +118,11 @@ class FileCacheManager(
         return false
     }
 
+
     private fun removeEventFromMap(event: Event) {
         eventToFileIdMap.remove(event.id)
     }
+
 
     override fun updateEventStatus(event: Event, status: EventStatus): Boolean {
         if (super.updateEventStatus(event, status)) {
@@ -124,6 +133,7 @@ class FileCacheManager(
         }
         return false
     }
+
 
     override fun updateEventStatusAll(eventList: List<Event>, status: EventStatus): Boolean {
         if (super.updateEventStatusAll(eventList, status)) {
@@ -139,6 +149,7 @@ class FileCacheManager(
         return false
     }
 
+
     override fun syncDataToCache(success: (Boolean) -> Unit) {
         sharedFlow.tryEmit(
             scope.launch(start = CoroutineStart.LAZY) {
@@ -152,6 +163,7 @@ class FileCacheManager(
             }
         )
     }
+
 
     override fun syncDataFromCache(success: (Boolean, List<Event>) -> Unit) {
         sharedFlow.tryEmit(
@@ -167,6 +179,7 @@ class FileCacheManager(
         )
     }
 
+
     private fun syncEventToFile(event: Event) {
         sharedFlow.tryEmit(
             scope.launch(start = CoroutineStart.LAZY) {
@@ -181,6 +194,7 @@ class FileCacheManager(
             }
         )
     }
+
 
     private fun syncEventsToFile(eventList: List<Event>) {
         sharedFlow.tryEmit(
@@ -198,6 +212,7 @@ class FileCacheManager(
             }
         )
     }
+
 
     private fun syncEventRemovalToFile(event: Event) {
         sharedFlow.tryEmit(
@@ -231,6 +246,7 @@ class FileCacheManager(
             }
         )
     }
+
 
     @Throws(Exception::class)
     private suspend fun moveInMemoryDataToFile() =
@@ -304,6 +320,7 @@ class FileCacheManager(
                 }
             }
         }
+
 
     @Throws(Exception::class)
     private suspend fun readEventsFromFile(fileId: String): List<Event> =

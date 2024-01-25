@@ -2,6 +2,7 @@ package com.khush.eventkt
 
 import android.app.Application
 import android.content.Context
+import com.khush.eventkt.base.ITracker
 import com.khush.eventkt.event.Event
 import com.khush.eventkt.event.EventManager
 import com.khush.eventkt.network.ClientCallbackProvider
@@ -10,11 +11,11 @@ import com.khush.eventkt.network.NetworkCallManager
 import com.khush.eventkt.observer.ActivityLifecycleCallback
 import com.khush.eventkt.persistent.FileCacheManager
 import com.khush.eventkt.persistent.ICacheScheme
-import com.khush.eventkt.utils.BaseParamUtil
 import com.khush.eventkt.utils.EventKtLog
 import com.khush.eventkt.utils.Utils
 import com.khush.eventkt.utils.Utils.generateFilePath
 import com.khush.eventkt.utils.Utils.validateThresholds
+
 
 class EventKtTracker private constructor(
     context: Context,
@@ -28,9 +29,7 @@ class EventKtTracker private constructor(
     private val eventValidationConfig: EventValidationConfig,
     logger: Logger,
     makeNetworkRequest: suspend (String, List<EventNameParam>) -> Boolean
-) {
-
-    private val baseParamUtil = BaseParamUtil()
+) : ITracker {
 
     private val eventManager = EventManager(
         numBased = eventNumThreshold > 0, //if greater than 0 then count based
@@ -59,6 +58,7 @@ class EventKtTracker private constructor(
     }
 
     companion object {
+
         fun init(
             context: Context,
             apiUrl: String,
@@ -97,6 +97,7 @@ class EventKtTracker private constructor(
             )
         }
 
+
         fun initWithCallback(
             context: Context,
             eventThreshold: List<EventThreshold> = listOf(EventThreshold.NumBased()),
@@ -130,8 +131,8 @@ class EventKtTracker private constructor(
         }
     }
 
-    fun track(eventName: String, eventParameters: HashMap<String, Any>) {
-        eventParameters.putAll(baseParamUtil.getBaseParams())
+
+    override fun track(eventName: String, eventParameters: HashMap<String, Any>) {
         val event = Event(eventName, eventParameters)
         Utils.validateEvent(
             event = event,
@@ -140,31 +141,9 @@ class EventKtTracker private constructor(
         eventManager.add(event)
     }
 
-    fun trackAll() {
+
+    override fun trackAll() {
         eventManager.flushAll()
     }
-
-    @Synchronized
-    fun addBaseParams(params: HashMap<String, Any>) {
-        baseParamUtil.addBaseParams(params)
-    }
-
-    @Synchronized
-    fun removeBaseParams(params: HashMap<String, Any>) {
-        baseParamUtil.removeBaseParams(params)
-    }
-
-    @Synchronized
-    fun addBaseParam(key: String, value: Any) {
-        baseParamUtil.addBaseParam(key, value)
-    }
-
-    @Synchronized
-    fun removeBaseParam(key: String) {
-        baseParamUtil.removeBaseParam(key)
-    }
-
-    @Synchronized
-    fun getBaseParams() = baseParamUtil.getBaseParams()
 
 }

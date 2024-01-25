@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.khush.eventkt'
+    namespace 'com.khush.eventkt.base'
     compileSdk 34
 
     defaultConfig {
@@ -27,9 +27,6 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 dependencies {
@@ -40,11 +37,4 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
-    implementation 'androidx.lifecycle:lifecycle-process:2.7.0'
-    api(project(":eventkt-base"))
-    debugImplementation(project(":eventkt-interceptor"))
-    releaseImplementation(project(":eventkt-interceptor-no-op"))
-
 }

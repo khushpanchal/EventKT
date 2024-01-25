@@ -17,8 +17,8 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import kotlin.experimental.and
 
-
 internal object Utils {
+
 
     fun RequestBody.toJson(): String {
         val requestBody = JSONObject()
@@ -37,6 +37,7 @@ internal object Utils {
         return requestBody.toString()
     }
 
+
     fun Event.toJson(): String {
         val jsonBody = JSONObject()
         jsonBody.put(NAME, this.name)
@@ -49,6 +50,25 @@ internal object Utils {
         jsonBody.put(STATUS, this.status)
         return jsonBody.toString()
     }
+
+
+    fun fromJson(jsonString: String): Event {
+        val jsonObject = JSONObject(jsonString)
+        val event = Event(
+            name = jsonObject.getString(NAME),
+            id = jsonObject.getString(ID),
+            status = jsonObject.getString(STATUS)
+        )
+        val paramJsonObject = jsonObject.getJSONObject(PARAMETERS)
+        val paramKeys = paramJsonObject.keys()
+        while (paramKeys.hasNext()) {
+            val keyValue = paramKeys.next()
+            val paramValue: String = paramJsonObject.getString(keyValue)
+            event.parameters[keyValue] = paramValue
+        }
+        return event
+    }
+
 
     fun List<Event>.toJson(): String {
         val jsonArray = JSONArray()
@@ -66,6 +86,7 @@ internal object Utils {
         }
         return jsonArray.toString()
     }
+
 
     fun fromJsonStringToEventList(jsonString: String): List<Event> {
         val eventList = mutableListOf<Event>()
@@ -89,6 +110,7 @@ internal object Utils {
         }
         return eventList
     }
+
 
     fun validateEvent(event: Event, eventValidationConfig: EventValidationConfig) {
         // Check length of name
@@ -125,6 +147,27 @@ internal object Utils {
         return value is String || value is Int || value is Double || value is Float || value is Long
     }
 
+
+    fun generateFilePath(string: String): String {
+        val hash: ByteArray = try {
+            MessageDigest.getInstance("MD5").digest(string.toByteArray(charset("UTF-8")))
+        } catch (e: NoSuchAlgorithmException) {
+            throw RuntimeException("NoSuchAlgorithmException", e)
+        } catch (e: UnsupportedEncodingException) {
+            throw RuntimeException("UnsupportedEncodingException", e)
+        }
+
+        val hex = StringBuilder(hash.size * 2)
+
+        for (b in hash) {
+            if (b and 0xFF.toByte() < 0x10) hex.append("0")
+            hex.append(Integer.toHexString((b and 0xFF.toByte()).toInt()))
+        }
+
+        return hex.toString().hashCode().toString()
+    }
+
+
     fun validateThresholds(eventThreshold: List<EventThreshold>): Triple<Int, Long, Int> {
         var eventNumThreshold = 0
         var eventTimeThreshold = 0L
@@ -145,25 +188,6 @@ internal object Utils {
             throw IllegalArgumentException(Const.WRONG_BATCH_THRESHOLDS)
         }
         return Triple(eventNumThreshold, eventTimeThreshold, eventSizeThreshold)
-    }
-
-    fun generateFilePath(string: String): String {
-        val hash: ByteArray = try {
-            MessageDigest.getInstance("MD5").digest(string.toByteArray(charset("UTF-8")))
-        } catch (e: NoSuchAlgorithmException) {
-            throw RuntimeException("NoSuchAlgorithmException", e)
-        } catch (e: UnsupportedEncodingException) {
-            throw RuntimeException("UnsupportedEncodingException", e)
-        }
-
-        val hex = StringBuilder(hash.size * 2)
-
-        for (b in hash) {
-            if (b and 0xFF.toByte() < 0x10) hex.append("0")
-            hex.append(Integer.toHexString((b and 0xFF.toByte()).toInt()))
-        }
-
-        return hex.toString().hashCode().toString()
     }
 
 }
