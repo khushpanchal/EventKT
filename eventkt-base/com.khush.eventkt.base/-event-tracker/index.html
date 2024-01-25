@@ -1,0 +1,209 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>EventTracker</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            EventKT
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":eventkt-base:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="eventkt-base::com.khush.eventkt.base/EventTracker///PointingToDeclaration//102199960">
+  <div class="breadcrumbs"><a href="../../index.html">eventkt-base</a><span class="delimiter">/</span><a href="../index.html">com.khush.eventkt.base</a><span class="delimiter">/</span><span class="current">EventTracker</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Event</span><wbr><span><span>Tracker</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">EventTracker</a></div><p class="paragraph">Core class that interacts with the client</p><p class="paragraph">Contains a list of all the trackers</p><ul><li><p class="paragraph">To initialize and add trackers:-</p></li></ul><p class="paragraph">Initialize respective Trackers and build inside application onCreate()</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">val eventTracker =<br> EventTracker.Builder()<br>  .addTracker(EventKtTracker.init(...)) //Need to add dependency for eventkt<br>  .addTracker(FirebaseTracker.init(this)) //Need to add dependency for eventkt-firebase<br>  .addTracker(MixpanelTracker.init(this, "Add your mixpanel token")) //Need to add dependency for eventkt-mixpanel<br>  .addTracker(AmplitudeTracker.init(this, "Add your amplitude API key")) //Need to add dependency for eventkt-amplitude<br>  .build()</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><ul><li><p class="paragraph">To add base parameters:-</p></li></ul><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">eventTracker.addBaseParams(<br> hashMapOf(<br>  Pair("BaseKey1", "BaseValue1"),<br>  Pair("BaseKey2", "BaseValue2")<br> )<br>)<br>eventTracker.addBaseParam("time", System.currentTimeMillis())</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><ul><li><p class="paragraph">To use:-</p></li></ul><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">val parameters = hashMapOf&lt;String, Any&gt;()<br>parameters["eventSpecificKey1"] = "eventSpecificValue1"<br>parameters["eventSpecificKey2"] = "eventSpecificValue2"<br><br>eventTracker.track("appOpen", parameters)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><ul><li><p class="paragraph">To track some events for specific Tracker:-</p></li></ul><p class="paragraph">Say to track event "XYZ" for EventKtTracker only</p><p class="paragraph">Initialize and pass the EventKtTracker to EventTracker.Builder from outside</p><p class="paragraph">Use same instance of EventKtTracker passed in EventTracker.Builder and track</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">val eventKtTracker = EventKtTracker.init(...)<br>val eventTracker =<br> EventTracker.Builder()<br>  .addTracker(eventKtTracker)<br>  .//add other trackers and build<br><br>eventKtTracker.track("XYZ",<br> hashMapOf&lt;String, Any&gt;().apply {<br>  putAll(eventTracker.getBaseParams()) //add base parameters to event specific parameters before track<br> }<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h4 class="">Throws</h4><div class="table"><div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-state-exception/index.html"><span>Illegal</span><wbr><span>State</span><wbr><span><span>Exception</span></span></a></div></span></div><div><div class="title"><p class="paragraph">If initialize without any tracker in the list</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-746514047%2FClasslikes%2F102199960" anchor-label="Builder" id="-746514047%2FClasslikes%2F102199960" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-builder/index.html"><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-746514047%2FClasslikes%2F102199960"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-builder/index.html">Builder</a></div><div class="brief "><p class="paragraph">Builder class to build the instance of <a href="index.html">EventTracker</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1708797394%2FFunctions%2F102199960" anchor-label="addBaseParam" id="1708797394%2FFunctions%2F102199960" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-base-param.html"><span>add</span><wbr><span>Base</span><wbr><span><span>Param</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1708797394%2FFunctions%2F102199960"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html"><span class="token annotation builtin">Synchronized</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-base-param.html"><span class="token function">addBaseParam</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add base param</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1212580782%2FFunctions%2F102199960" anchor-label="addBaseParams" id="1212580782%2FFunctions%2F102199960" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-base-params.html"><span>add</span><wbr><span>Base</span><wbr><span><span>Params</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1212580782%2FFunctions%2F102199960"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html"><span class="token annotation builtin">Synchronized</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-base-params.html"><span class="token function">addBaseParams</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">params<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html">HashMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add base params</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1951374820%2FFunctions%2F102199960" anchor-label="getBaseParams" id="-1951374820%2FFunctions%2F102199960" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-base-params.html"><span>get</span><wbr><span>Base</span><wbr><span><span>Params</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1951374820%2FFunctions%2F102199960"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html"><span class="token annotation builtin">Synchronized</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-base-params.html"><span class="token function">getBaseParams</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Get base params</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="973788051%2FFunctions%2F102199960" anchor-label="removeBaseParam" id="973788051%2FFunctions%2F102199960" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-base-param.html"><span>remove</span><wbr><span>Base</span><wbr><span><span>Param</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="973788051%2FFunctions%2F102199960"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html"><span class="token annotation builtin">Synchronized</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="remove-base-param.html"><span class="token function">removeBaseParam</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Remove base param</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1158030423%2FFunctions%2F102199960" anchor-label="removeBaseParams" id="-1158030423%2FFunctions%2F102199960" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-base-params.html"><span>remove</span><wbr><span>Base</span><wbr><span><span>Params</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1158030423%2FFunctions%2F102199960"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html"><span class="token annotation builtin">Synchronized</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="remove-base-params.html"><span class="token function">removeBaseParams</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">params<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html">HashMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Remove base params</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1802183654%2FFunctions%2F102199960" anchor-label="track" id="1802183654%2FFunctions%2F102199960" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="track.html"><span><span>track</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1802183654%2FFunctions%2F102199960"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html"><span class="token annotation builtin">Synchronized</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="track.html"><span class="token function">track</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">eventName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">eventParameters<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html">HashMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span><span class="token operator"> = </span>hashMapOf()</span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add base parameters to each event and delegate call to each tracker in the <a href="../../../eventkt-base/com.khush.eventkt.base/-event-tracker/tracker-list.html">trackerList</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="839229243%2FFunctions%2F102199960" anchor-label="trackAll" id="839229243%2FFunctions%2F102199960" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-base:dokkaHtmlPartial/release" data-filterable-set=":eventkt-base:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="track-all.html"><span>track</span><wbr><span><span>All</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="839229243%2FFunctions%2F102199960"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-base:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html"><span class="token annotation builtin">Synchronized</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="track-all.html"><span class="token function">trackAll</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Immediately Track all the events</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

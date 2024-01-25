@@ -1,0 +1,224 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>AmplitudeTracker</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            EventKT
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":eventkt-amplitude:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="eventkt-amplitude::com.khush.eventkt.amplitude/AmplitudeTracker///PointingToDeclaration//1033859276">
+  <div class="breadcrumbs"><a href="../../index.html">eventkt-amplitude</a><span class="delimiter">/</span><a href="../index.html">com.khush.eventkt.amplitude</a><span class="delimiter">/</span><span class="current">AmplitudeTracker</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Amplitude</span><wbr><span><span>Tracker</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">AmplitudeTracker</a> : <a href="../../../eventkt-base/com.khush.eventkt.base/-i-tracker/index.html">ITracker</a></div><p class="paragraph">Amplitude tracker: Send events to amplitude analytics library</p><p class="paragraph">Implements <a href="../../../eventkt-base/com.khush.eventkt.base/-i-tracker/index.html">ITracker</a></p><p class="paragraph">Get unique api key from Amplitude <a href="https://www.docs.developers.amplitude.com/analytics/find-api-credentials/">Get API Key from Amplitude</a></p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">val amplitudeTracker = AmplitudeTracker.init(this, "your unique api key")<br>val eventTracker = EventTracker.Builder().addTracker(amplitudeTracker).build()</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph"><a href="https://www.docs.developers.amplitude.com/data/sdks/android-kotlin/">Check amplitude documentations for more info</a></p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>context</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Application context</p></div></div></div></div><div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>api</span><wbr><span><span>Key</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Unique API key for your project</p></div></div></div></div><div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>sessions</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Boolean to enable session events tracking</p></div></div></div></div><div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>app</span><wbr><span><span>Lifecycles</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Boolean to enable app lifecycle events tracking</p></div></div></div></div><div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>deep</span><wbr><span><span>Links</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Boolean to enable deeplink events tracking</p></div></div></div></div><div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>screen</span><wbr><span><span>Views</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Boolean to enable screen view events tracking</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-2027899335%2FClasslikes%2F1033859276" anchor-label="Companion" id="-2027899335%2FClasslikes%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2027899335%2FClasslikes%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="661186546%2FFunctions%2F1033859276" anchor-label="optOut" id="661186546%2FFunctions%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="opt-out.html"><span>opt</span><wbr><span><span>Out</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="661186546%2FFunctions%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="opt-out.html"><span class="token function">optOut</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Opt out <a href="https://www.docs.developers.amplitude.com/data/sdks/android-kotlin/">Check amplitude documentations for more info</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1029126373%2FFunctions%2F1033859276" anchor-label="setDeviceId" id="1029126373%2FFunctions%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-device-id.html"><span>set</span><wbr><span>Device</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1029126373%2FFunctions%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-device-id.html"><span class="token function">setDeviceId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">deviceId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set device id <a href="https://www.docs.developers.amplitude.com/data/sdks/android-kotlin/">Check amplitude documentations for more info</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="737903761%2FFunctions%2F1033859276" anchor-label="setEUServerZone" id="737903761%2FFunctions%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-e-u-server-zone.html"><span>set</span><wbr><span>EUServer</span><wbr><span><span>Zone</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="737903761%2FFunctions%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-e-u-server-zone.html"><span class="token function">setEUServerZone</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set EU server zone <a href="https://www.docs.developers.amplitude.com/data/sdks/android-kotlin/">Check amplitude documentations for more info</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="176932102%2FFunctions%2F1033859276" anchor-label="setServerUrl" id="176932102%2FFunctions%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-server-url.html"><span>set</span><wbr><span>Server</span><wbr><span><span>Url</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="176932102%2FFunctions%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-server-url.html"><span class="token function">setServerUrl</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">serverUrl<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set server url <a href="https://www.docs.developers.amplitude.com/data/sdks/android-kotlin/">Check amplitude documentations for more info</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="731321737%2FFunctions%2F1033859276" anchor-label="setUserId" id="731321737%2FFunctions%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-user-id.html"><span>set</span><wbr><span>User</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="731321737%2FFunctions%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-user-id.html"><span class="token function">setUserId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set user id <a href="https://www.docs.developers.amplitude.com/data/sdks/android-kotlin/">Check amplitude documentations for more info</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2113555427%2FFunctions%2F1033859276" anchor-label="setUSServerZone" id="2113555427%2FFunctions%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-u-s-server-zone.html"><span>set</span><wbr><span>USServer</span><wbr><span><span>Zone</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2113555427%2FFunctions%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-u-s-server-zone.html"><span class="token function">setUSServerZone</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set US server zone <a href="https://www.docs.developers.amplitude.com/data/sdks/android-kotlin/">Check amplitude documentations for more info</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1770341955%2FFunctions%2F1033859276" anchor-label="track" id="-1770341955%2FFunctions%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="track.html"><span><span>track</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1770341955%2FFunctions%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="track.html"><span class="token function">track</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">eventName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">eventParameters<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html">HashMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1445284946%2FFunctions%2F1033859276" anchor-label="trackAll" id="1445284946%2FFunctions%2F1033859276" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":eventkt-amplitude:dokkaHtmlPartial/release" data-filterable-set=":eventkt-amplitude:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="track-all.html"><span>track</span><wbr><span><span>All</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1445284946%2FFunctions%2F1033859276"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":eventkt-amplitude:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="track-all.html"><span class="token function">trackAll</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
