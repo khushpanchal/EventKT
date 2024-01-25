@@ -12,14 +12,27 @@ import com.khush.eventkt.network.model.RequestBody
 import com.khush.eventkt.observer.AppLifecycleObserver
 import com.khush.eventkt.persistent.ICacheScheme
 import com.khush.eventkt.utils.Utils.toJson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 internal class EventManager(
+    private val numBased: Boolean,
     private val eventNumThreshold: Int,
+    private val timeBased: Boolean,
+    private val eventTimeThreshold: Long,
+    private val sizeBased: Boolean,
+    private val eventSizeThreshold: Int,
     private val iGroupEventListener: IGroupEventListener,
     private val iCacheScheme: ICacheScheme,
 ) {
 
     private var currentEventNum = iCacheScheme.getEventSize()
+    private var timerJob: Job? = null
+    private var currentEventSize = iCacheScheme.getEventSizeInBytes()
 
     init {
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver(this))
@@ -35,7 +48,9 @@ internal class EventManager(
 
     private fun checkThreshold(): Boolean {
         currentEventNum = iCacheScheme.getEventSize(listOf(DEFAULT))
-        return (currentEventNum >= eventNumThreshold)
+        currentEventSize = iCacheScheme.getEventSizeInBytes(listOf(DEFAULT))
+        return (numBased && currentEventNum >= eventNumThreshold)
+                || (sizeBased && currentEventSize >= eventSizeThreshold)
     }
 
     @Synchronized
@@ -84,6 +99,21 @@ internal class EventManager(
         }
         val requestBody = RequestBody(eventRequestBody.toList())
         return requestBody.toJson()
+    }
+
+    fun startTimer() {
+        if (!timeBased) return
+        timerJob = CoroutineScope(Dispatchers.IO).launch {
+            while (isActive) {
+                delay(eventTimeThreshold)
+                flushAll()
+            }
+        }
+    }
+
+    fun stopTimer() {
+        if (!timeBased) return
+        timerJob?.cancel()
     }
 
 }

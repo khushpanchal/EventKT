@@ -8,23 +8,33 @@ import com.khush.eventkt.network.NetworkCallManager
 import com.khush.eventkt.observer.ActivityLifecycleCallback
 import com.khush.eventkt.persistent.ICacheScheme
 import com.khush.eventkt.persistent.InMemoryCacheManager
-import com.khush.eventkt.utils.Const
+import com.khush.eventkt.utils.Utils
+import com.khush.eventkt.utils.Utils.validateThresholds
 
 class EventKtTracker private constructor(
     context: Context,
     apiUrl: String,
     apiHeaders: HashMap<String, String>,
     eventNumThreshold: Int,
-    cacheScheme: ICacheScheme
+    eventTimeThreshold: Long,
+    eventSizeThreshold: Int,
+    cacheScheme: ICacheScheme,
+    private val eventValidationConfig: EventValidationConfig
 ) {
 
     private val eventManager = EventManager(
+        numBased = eventNumThreshold > 0, //if greater than 0 then count based
         eventNumThreshold = eventNumThreshold,
+        timeBased = eventTimeThreshold > 0, //if greater than 0 then time based
+        eventTimeThreshold = eventTimeThreshold,
+        sizeBased = eventSizeThreshold > 0, //if greater than 0 then size based
+        eventSizeThreshold = eventSizeThreshold,
         iGroupEventListener =
             NetworkCallManager(
                 apiUrl = apiUrl,
                 apiHeaders = apiHeaders
-            ),
+            )
+        ,
         iCacheScheme = cacheScheme
     )
 
@@ -38,27 +48,39 @@ class EventKtTracker private constructor(
             context: Context,
             apiUrl: String,
             apiHeaders: HashMap<String, String> = HashMap(),
-            eventNumThreshold: Int = Const.DEFAULT_EVENT_NUM_THRESHOLD,
+            eventThreshold: List<EventThreshold> = listOf(EventThreshold.NumBased()),
             apiKey: String,
-            cacheScheme: ICacheScheme = InMemoryCacheManager()
+            cacheScheme: ICacheScheme = InMemoryCacheManager(),
+            eventValidationConfig: EventValidationConfig = EventValidationConfig()
         ): EventKtTracker {
 
             if (apiKey.isNotEmpty()) {
                 apiHeaders["x-api-key"] = apiKey
             }
 
+            val (eventNumThreshold, eventTimeThreshold, eventSizeThreshold) = validateThresholds(
+                eventThreshold
+            )
+
             return EventKtTracker(
                 context = context.applicationContext,
                 apiUrl = apiUrl,
                 apiHeaders = apiHeaders,
                 eventNumThreshold = eventNumThreshold,
-                cacheScheme = cacheScheme
+                eventTimeThreshold = eventTimeThreshold,
+                eventSizeThreshold = eventSizeThreshold,
+                cacheScheme = cacheScheme,
+                eventValidationConfig = eventValidationConfig
             )
         }
     }
 
     fun track(eventName: String, eventParameters: HashMap<String, Any>) {
         val event = Event(eventName, eventParameters)
+        Utils.validateEvent(
+            event = event,
+            eventValidationConfig = eventValidationConfig
+        )
         eventManager.add(event)
     }
 
