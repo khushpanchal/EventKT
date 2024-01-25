@@ -8,6 +8,7 @@ import com.khush.eventkt.network.NetworkCallManager
 import com.khush.eventkt.observer.ActivityLifecycleCallback
 import com.khush.eventkt.persistent.ICacheScheme
 import com.khush.eventkt.persistent.InMemoryCacheManager
+import com.khush.eventkt.utils.BaseParamUtil
 import com.khush.eventkt.utils.Utils
 import com.khush.eventkt.utils.Utils.validateThresholds
 
@@ -21,6 +22,8 @@ class EventKtTracker private constructor(
     cacheScheme: ICacheScheme,
     private val eventValidationConfig: EventValidationConfig
 ) {
+
+    private val baseParamUtil = BaseParamUtil()
 
     private val eventManager = EventManager(
         numBased = eventNumThreshold > 0, //if greater than 0 then count based
@@ -76,6 +79,7 @@ class EventKtTracker private constructor(
     }
 
     fun track(eventName: String, eventParameters: HashMap<String, Any>) {
+        eventParameters.putAll(baseParamUtil.getBaseParams())
         val event = Event(eventName, eventParameters)
         Utils.validateEvent(
             event = event,
@@ -87,5 +91,28 @@ class EventKtTracker private constructor(
     fun trackAll() {
         eventManager.flushAll()
     }
+
+    @Synchronized
+    fun addBaseParams(params: HashMap<String, Any>) {
+        baseParamUtil.addBaseParams(params)
+    }
+
+    @Synchronized
+    fun removeBaseParams(params: HashMap<String, Any>) {
+        baseParamUtil.removeBaseParams(params)
+    }
+
+    @Synchronized
+    fun addBaseParam(key: String, value: Any) {
+        baseParamUtil.addBaseParam(key, value)
+    }
+
+    @Synchronized
+    fun removeBaseParam(key: String) {
+        baseParamUtil.removeBaseParam(key)
+    }
+
+    @Synchronized
+    fun getBaseParams() = baseParamUtil.getBaseParams()
 
 }

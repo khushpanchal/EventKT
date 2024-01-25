@@ -33,6 +33,10 @@ class MainTracker(
     }
 
     private fun track(name: String, params: HashMap<String, Any>) {
+        (context.applicationContext as MainApplication).eventKtTracker.addBaseParam(
+            "time",
+            System.currentTimeMillis()
+        )
         (context.applicationContext as MainApplication).eventKtTracker.track(name, params)
     }
 
