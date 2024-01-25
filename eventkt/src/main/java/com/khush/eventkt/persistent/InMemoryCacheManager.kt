@@ -8,7 +8,7 @@ import java.util.Collections
 
 open class InMemoryCacheManager : ICacheScheme {
 
-    private val eventHashMap: MutableMap<String, Event> =
+    protected val eventHashMap: MutableMap<String, Event> =
         Collections.synchronizedMap(HashMap()) //Use synchronization for iterators (like eventHashMap.values)
 
     @CallSuper
@@ -69,6 +69,13 @@ open class InMemoryCacheManager : ICacheScheme {
         return byteArray.size
     }
 
+    override fun syncDataToCache(success: (Boolean) -> Unit) {
+        //Implement by child class (Load from memory)
+    }
+
+    override fun syncDataFromCache(success: (Boolean, List<Event>) -> Unit) {
+        //Implement by child class (Load into memory)
+    }
 
     @CallSuper
     override fun updateEventStatus(event: Event, status: EventStatus): Boolean {

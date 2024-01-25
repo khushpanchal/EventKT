@@ -32,4 +32,6 @@ internal object Const {
 
     const val WRONG_BATCH_THRESHOLDS =
         "value passed in threshold should be greater than 0"
+    const val FILE_EXCEPTION = "ReSync complete memory"
+
 }

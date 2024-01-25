@@ -6,10 +6,11 @@ import com.khush.eventkt.event.Event
 import com.khush.eventkt.event.EventManager
 import com.khush.eventkt.network.NetworkCallManager
 import com.khush.eventkt.observer.ActivityLifecycleCallback
+import com.khush.eventkt.persistent.FileCacheManager
 import com.khush.eventkt.persistent.ICacheScheme
-import com.khush.eventkt.persistent.InMemoryCacheManager
 import com.khush.eventkt.utils.BaseParamUtil
 import com.khush.eventkt.utils.Utils
+import com.khush.eventkt.utils.Utils.generateFilePath
 import com.khush.eventkt.utils.Utils.validateThresholds
 
 class EventKtTracker private constructor(
@@ -53,7 +54,10 @@ class EventKtTracker private constructor(
             apiHeaders: HashMap<String, String> = HashMap(),
             eventThreshold: List<EventThreshold> = listOf(EventThreshold.NumBased()),
             apiKey: String,
-            cacheScheme: ICacheScheme = InMemoryCacheManager(),
+            cacheScheme: ICacheScheme = FileCacheManager(
+                context = context.applicationContext,
+                filePath = generateFilePath(apiKey)
+            ),
             eventValidationConfig: EventValidationConfig = EventValidationConfig()
         ): EventKtTracker {
 

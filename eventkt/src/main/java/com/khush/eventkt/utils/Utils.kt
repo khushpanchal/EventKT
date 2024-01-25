@@ -12,6 +12,10 @@ import com.khush.eventkt.utils.Const.PARAMETERS
 import com.khush.eventkt.utils.Const.STATUS
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.UnsupportedEncodingException
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import kotlin.experimental.and
 
 
 internal object Utils {
@@ -44,6 +48,46 @@ internal object Utils {
         jsonBody.put(ID, this.id)
         jsonBody.put(STATUS, this.status)
         return jsonBody.toString()
+    }
+
+    fun List<Event>.toJson(): String {
+        val jsonArray = JSONArray()
+        this.forEach {
+            val jsonBody = JSONObject()
+            jsonBody.put(NAME, it.name)
+            val parameterJson = JSONObject()
+            it.parameters.forEach { param ->
+                parameterJson.put(param.key, param.value)
+            }
+            jsonBody.put(PARAMETERS, parameterJson)
+            jsonBody.put(ID, it.id)
+            jsonBody.put(STATUS, it.status)
+            jsonArray.put(jsonBody)
+        }
+        return jsonArray.toString()
+    }
+
+    fun fromJsonStringToEventList(jsonString: String): List<Event> {
+        val eventList = mutableListOf<Event>()
+        val jsonArray = JSONArray(jsonString)
+
+        for (index in 0 until jsonArray.length()) {
+            val jsonObject = jsonArray.getJSONObject(index)
+            val event = Event(
+                name = jsonObject.getString(NAME),
+                id = jsonObject.getString(ID),
+                status = jsonObject.getString(STATUS)
+            )
+            val paramJsonObject = jsonObject.getJSONObject(PARAMETERS)
+            val paramKeys = paramJsonObject.keys()
+            while (paramKeys.hasNext()) {
+                val keyValue = paramKeys.next()
+                val paramValue: String = paramJsonObject.getString(keyValue)
+                event.parameters[keyValue] = paramValue
+            }
+            eventList.add(event)
+        }
+        return eventList
     }
 
     fun validateEvent(event: Event, eventValidationConfig: EventValidationConfig) {
@@ -101,6 +145,25 @@ internal object Utils {
             throw IllegalArgumentException(Const.WRONG_BATCH_THRESHOLDS)
         }
         return Triple(eventNumThreshold, eventTimeThreshold, eventSizeThreshold)
+    }
+
+    fun generateFilePath(string: String): String {
+        val hash: ByteArray = try {
+            MessageDigest.getInstance("MD5").digest(string.toByteArray(charset("UTF-8")))
+        } catch (e: NoSuchAlgorithmException) {
+            throw RuntimeException("NoSuchAlgorithmException", e)
+        } catch (e: UnsupportedEncodingException) {
+            throw RuntimeException("UnsupportedEncodingException", e)
+        }
+
+        val hex = StringBuilder(hash.size * 2)
+
+        for (b in hash) {
+            if (b and 0xFF.toByte() < 0x10) hex.append("0")
+            hex.append(Integer.toHexString((b and 0xFF.toByte()).toInt()))
+        }
+
+        return hex.toString().hashCode().toString()
     }
 
 }

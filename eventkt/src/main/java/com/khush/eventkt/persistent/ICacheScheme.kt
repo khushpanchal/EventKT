@@ -28,6 +28,12 @@ interface ICacheScheme {
     fun getEventSizeInBytes(status: List<EventStatus> = Const.allStatusList): Int
 
 
+    fun syncDataToCache(success: (Boolean) -> Unit = {})
+
+
+    fun syncDataFromCache(success: (Boolean, List<Event>) -> Unit = { _, _ -> })
+
+
     fun updateEventStatus(event: Event, status: EventStatus): Boolean
 
 
