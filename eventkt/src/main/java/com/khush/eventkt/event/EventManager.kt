@@ -1,7 +1,7 @@
 package com.khush.eventkt.event
 
-import android.util.Log
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.khush.eventkt.Logger
 import com.khush.eventkt.event.EventStatus.DEFAULT
 import com.khush.eventkt.event.EventStatus.FAILED
 import com.khush.eventkt.event.EventStatus.PENDING
@@ -28,6 +28,7 @@ internal class EventManager(
     private val eventSizeThreshold: Int,
     private val iGroupEventListener: IGroupEventListener,
     private val iCacheScheme: ICacheScheme,
+    private val logger: Logger
 ) {
 
     private var currentEventNum = iCacheScheme.getEventSize()
@@ -39,7 +40,7 @@ internal class EventManager(
     }
 
     fun add(event: Event, force: Boolean = false) {
-        Log.i("EventKtLogs", "Event Added: ${event.toJson()}")
+        logger.log(msg = "Event Added: ${event.toJson()}")
         iCacheScheme.add(event)
         if (checkThreshold() || force) {
             flushAll()
@@ -73,16 +74,16 @@ internal class EventManager(
         if (eventList.isEmpty()) return
         iCacheScheme.updateEventStatusAll(eventList, PENDING)
         val jsonStringRequest = eventListToJsonString(eventList)
-        Log.i("EventKtLogs", "Network call started with request body: $jsonStringRequest")
+        logger.log(msg = "Network call started with request body: $jsonStringRequest")
         iGroupEventListener.onEventGrouped(
             eventList,
             jsonStringRequest
         ) { success, requestBody, list ->
             if (success) {
-                Log.i("EventKtLogs", "Network call success with request body: $requestBody")
+                logger.log(msg = "Network call success for request body: $requestBody")
                 networkSuccess(list)
             } else {
-                Log.i("EventKtLogs", "Network call failed with request body: $requestBody")
+                logger.log(msg = "Network call failed for request body: $requestBody")
                 networkFailure(list)
             }
         }

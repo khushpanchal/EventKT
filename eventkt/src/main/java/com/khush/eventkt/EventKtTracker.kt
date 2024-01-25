@@ -9,6 +9,7 @@ import com.khush.eventkt.observer.ActivityLifecycleCallback
 import com.khush.eventkt.persistent.FileCacheManager
 import com.khush.eventkt.persistent.ICacheScheme
 import com.khush.eventkt.utils.BaseParamUtil
+import com.khush.eventkt.utils.EventKtLog
 import com.khush.eventkt.utils.Utils
 import com.khush.eventkt.utils.Utils.generateFilePath
 import com.khush.eventkt.utils.Utils.validateThresholds
@@ -21,7 +22,8 @@ class EventKtTracker private constructor(
     eventTimeThreshold: Long,
     eventSizeThreshold: Int,
     cacheScheme: ICacheScheme,
-    private val eventValidationConfig: EventValidationConfig
+    private val eventValidationConfig: EventValidationConfig,
+    logger: Logger
 ) {
 
     private val baseParamUtil = BaseParamUtil()
@@ -39,7 +41,8 @@ class EventKtTracker private constructor(
                 apiHeaders = apiHeaders
             )
         ,
-        iCacheScheme = cacheScheme
+        iCacheScheme = cacheScheme,
+        logger = logger
     )
 
     init {
@@ -58,7 +61,9 @@ class EventKtTracker private constructor(
                 context = context.applicationContext,
                 filePath = generateFilePath(apiKey)
             ),
-            eventValidationConfig: EventValidationConfig = EventValidationConfig()
+            eventValidationConfig: EventValidationConfig = EventValidationConfig(),
+            enableLogs: Boolean = BuildConfig.DEBUG,
+            logger: Logger = EventKtLog(enableLogs)
         ): EventKtTracker {
 
             if (apiKey.isNotEmpty()) {
@@ -77,8 +82,9 @@ class EventKtTracker private constructor(
                 eventTimeThreshold = eventTimeThreshold,
                 eventSizeThreshold = eventSizeThreshold,
                 cacheScheme = cacheScheme,
-                eventValidationConfig = eventValidationConfig
-            )
+                eventValidationConfig = eventValidationConfig,
+                logger = logger,
+                )
         }
     }
 
