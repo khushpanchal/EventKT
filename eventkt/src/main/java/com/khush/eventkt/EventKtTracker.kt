@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import com.khush.eventkt.event.Event
 import com.khush.eventkt.event.EventManager
+import com.khush.eventkt.network.ClientCallbackProvider
+import com.khush.eventkt.network.EventNameParam
 import com.khush.eventkt.network.NetworkCallManager
 import com.khush.eventkt.observer.ActivityLifecycleCallback
 import com.khush.eventkt.persistent.FileCacheManager
@@ -16,6 +18,7 @@ import com.khush.eventkt.utils.Utils.validateThresholds
 
 class EventKtTracker private constructor(
     context: Context,
+    needApiCall: Boolean,
     apiUrl: String,
     apiHeaders: HashMap<String, String>,
     eventNumThreshold: Int,
@@ -23,7 +26,8 @@ class EventKtTracker private constructor(
     eventSizeThreshold: Int,
     cacheScheme: ICacheScheme,
     private val eventValidationConfig: EventValidationConfig,
-    logger: Logger
+    logger: Logger,
+    makeNetworkRequest: suspend (String, List<EventNameParam>) -> Boolean
 ) {
 
     private val baseParamUtil = BaseParamUtil()
@@ -35,12 +39,16 @@ class EventKtTracker private constructor(
         eventTimeThreshold = eventTimeThreshold,
         sizeBased = eventSizeThreshold > 0, //if greater than 0 then size based
         eventSizeThreshold = eventSizeThreshold,
-        iGroupEventListener =
+        iGroupEventListener = if (needApiCall) {
             NetworkCallManager(
                 apiUrl = apiUrl,
                 apiHeaders = apiHeaders
             )
-        ,
+        } else {
+            ClientCallbackProvider(
+                makeNetworkRequest = makeNetworkRequest
+            )
+        },
         iCacheScheme = cacheScheme,
         logger = logger
     )
@@ -66,16 +74,17 @@ class EventKtTracker private constructor(
             logger: Logger = EventKtLog(enableLogs)
         ): EventKtTracker {
 
-            if (apiKey.isNotEmpty()) {
-                apiHeaders["x-api-key"] = apiKey
-            }
-
             val (eventNumThreshold, eventTimeThreshold, eventSizeThreshold) = validateThresholds(
                 eventThreshold
             )
 
+            if (apiKey.isNotEmpty()) {
+                apiHeaders["x-api-key"] = apiKey
+            }
+
             return EventKtTracker(
                 context = context.applicationContext,
+                needApiCall = true,
                 apiUrl = apiUrl,
                 apiHeaders = apiHeaders,
                 eventNumThreshold = eventNumThreshold,
@@ -84,7 +93,40 @@ class EventKtTracker private constructor(
                 cacheScheme = cacheScheme,
                 eventValidationConfig = eventValidationConfig,
                 logger = logger,
-                )
+                makeNetworkRequest = { _, _ -> false }
+            )
+        }
+
+        fun initWithCallback(
+            context: Context,
+            eventThreshold: List<EventThreshold> = listOf(EventThreshold.NumBased()),
+            directoryName: String,
+            cacheScheme: ICacheScheme = FileCacheManager(
+                context = context.applicationContext,
+                filePath = directoryName
+            ),
+            eventValidationConfig: EventValidationConfig = EventValidationConfig(),
+            enableLogs: Boolean = BuildConfig.DEBUG,
+            logger: Logger = EventKtLog(enableLogs),
+            makeNetworkRequest: suspend (String, List<EventNameParam>) -> Boolean
+        ): EventKtTracker {
+            val (eventNumThreshold, eventTimeThreshold, eventSizeThreshold) = validateThresholds(
+                eventThreshold
+            )
+
+            return EventKtTracker(
+                context = context.applicationContext,
+                needApiCall = false,
+                apiUrl = "",
+                apiHeaders = hashMapOf(),
+                eventNumThreshold = eventNumThreshold,
+                eventTimeThreshold = eventTimeThreshold,
+                eventSizeThreshold = eventSizeThreshold,
+                cacheScheme = cacheScheme,
+                eventValidationConfig = eventValidationConfig,
+                logger = logger,
+                makeNetworkRequest = makeNetworkRequest
+            )
         }
     }
 
