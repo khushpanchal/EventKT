@@ -5,6 +5,7 @@ import android.util.Log
 import com.khush.eventkt.EventKtTracker
 import com.khush.eventkt.base.EventTracker
 import com.khush.eventkt.firebase.FirebaseTracker
+import com.khush.eventkt.mixpanel.MixpanelTracker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -42,6 +43,10 @@ class MainApplication : Application() {
                 .addTracker(
                     FirebaseTracker.init(this)
                 )
+                .addTracker {
+                    val mixPanelToken = "Add your mixpanel token"
+                    MixpanelTracker.init(this, mixPanelToken)
+                }
                 .build()
 
 
