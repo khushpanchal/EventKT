@@ -2,7 +2,9 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <!--FIXME - Title - EventKT -->
     <title>EventKT</title>
+    <!--FIXME - Keep logo as EventKT logo-->
     <link href="images/logo-icon.svg" rel="icon" type="image/svg">
     <script>var pathToRoot = "";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
@@ -48,6 +50,26 @@
         </div>
     </div>
     <div class="navigation-controls">
+
+        <!--FIXME - Linkedin and github link -->
+        <a href="https://www.linkedin.com/in/khush-panchal-241098170/" target="_blank" style="color: white; text-decoration: none; position: relative; margin-left: 10px; margin-right: 10px; display: block;" id="linkedinLink" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+            Linkedin
+        </a>
+
+        <a href="https://github.com/khushpanchal/EventKT" target="_blank" style="color: white; text-decoration: none; position: relative; margin-left: 10px; margin-right: 10px; display: block;" id="githubLink" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+            Github Project
+        </a>
+
+        <script>
+            // Check if the screen width is less than or equal to 500 pixels (typical mobile devices)
+            if (window.innerWidth <= 500) {
+            // Hide the LinkedIn and GitHub links by setting their display property to "none"
+            document.getElementById("linkedinLink").style.display = "none";
+            document.getElementById("githubLink").style.display = "none";
+            }
+        </script>
+
+
         <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
         <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
     </div>
@@ -60,6 +82,7 @@
 <div class="main-content" id="content" pageIds="EventKT::.ext/allModules///PointingToDeclaration//0">
   <div class="breadcrumbs"></div>
   <div class="cover ">
+      <!--FIXME - Keep Readme of EventKT-->
 
       <md-block src="https://raw.githubusercontent.com/khushpanchal/EventKT/master/README.md">
       </md-block>
