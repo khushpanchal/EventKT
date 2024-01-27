@@ -68,7 +68,7 @@ In addition to the event-specific components, there are also Base Parameters whi
   <img width="500" alt = "High level design" src=https://raw.githubusercontent.com/khushpanchal/EventKT/master/assets/high-level-design.jpeg >
 </p>
 
-- **ITracker** - Interface containing track methods. Implemented by EventKtTracker (Main core class of EventKT library), FirebaseTracker, MixPanelTracker, AmplitudeTracker.
+- **ITracker** - Interface containing track methods. Implemented by EventKtTracker (Main core class of EventKT library), FirebaseTracker, MixpanelTracker, AmplitudeTracker.
   
 - **EventTracker** - Core class interacting with the client. Manages all trackers and delegates calls to specific trackers. Adds base parameters to each event before delegating the tracking call to individual trackers.
   
@@ -76,7 +76,7 @@ In addition to the event-specific components, there are also Base Parameters whi
   
 - **EventManager** - Manages events, handles grouping logic, network state, and interactions with caching and networking classes. Manages the state of each event, providing a transactional approach to safeguard against crashes.
   
-- **IGroupEventListener** - Iterface containing onEventGrouped method which gets invoked every time a group of events are ready for network call.
+- **IGroupEventListener** - Interface containing onEventGrouped method which gets invoked every time a group of events are ready for network call.
   
   - **NetworkCallManager** - Library makes the POST API call with help of API URL and API key passed by client.
     
@@ -142,7 +142,7 @@ Two ways of initialization:
 }
 ```
 
-  - API will add the below header in POST call.
+  - Library will add the below header in POST API call.
     
 ``` 
 "x-api-key" = "apiKey sent by client"
@@ -401,6 +401,10 @@ For more info, check [EventKT Reference documentation](https://khushpanchal.gith
    See the License for the specific language governing permissions and
    limitations under the License.
 ```
+
+## Blog
+
+Check out the blog: https://medium.com/@khush.panchal123/eventkt-track-it-all-1ab20888f985
 
 ## Contribute to the project
 
