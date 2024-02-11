@@ -1,4 +1,5 @@
 [![](https://jitpack.io/v/khushpanchal/EventKT.svg)](https://jitpack.io/#khushpanchal/EventKT)
+[![](https://androidweekly.net/issues/issue-609/badge)](https://androidweekly.net/issues/issue-609)
 
 <p align="center">
   <img width="950" src="https://raw.githubusercontent.com/khushpanchal/EventKT/master/assets/banner.jpeg" >
@@ -20,6 +21,7 @@
     - [Firebase](#firebase)
     - [Mixpanel](#mixpanel)
     - [Amplitude](#amplitude)
+- [Contact Me](#contact-me)
 
 <a name="about-eventkt"></a>
 # About EventKT
@@ -381,6 +383,13 @@ dependencies {
 ```
 
 For more info, check [EventKT Reference documentation](https://khushpanchal.github.io/EventKT/index.html).
+
+<a name="contact-me"></a>
+# Contact Me
+
+- [LinkedIn](https://www.linkedin.com/in/khush-panchal-241098170/)
+- [Twitter](https://twitter.com/KhushPanchal15)
+- [Gmail](mailto:khush.panchal123@gmail.com)
 
 ## If this project helps you, show love ❤️ by putting a ⭐ on [this](https://github.com/khushpanchal/EventKT) project ✌️
 
